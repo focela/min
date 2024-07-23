@@ -2,5 +2,5 @@
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
-// Package hash provides some classic hash functions(uint32/uint64) in go.
-package hash
+// Package rchash provides some classic hash functions(uint32/uint64) in go.
+package rchash

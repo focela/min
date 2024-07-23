@@ -2,7 +2,7 @@
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
-package hash
+package rchash
 
 // JS implements the classic JS hash algorithm for 32 bits.
 func JS(str []byte) uint32 {

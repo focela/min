@@ -2,7 +2,7 @@
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
-package hash
+package rchash
 
 // RS implements the classic RS hash algorithm for 32 bits.
 func RS(str []byte) uint32 {

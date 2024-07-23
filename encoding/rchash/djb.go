@@ -2,7 +2,7 @@
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
-package hash
+package rchash
 
 // DJB implements the classic DJB hash algorithm for 32 bits.
 func DJB(str []byte) uint32 {

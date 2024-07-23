@@ -2,7 +2,7 @@
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
-package hash
+package rchash
 
 // PJW implements the classic PJW hash algorithm for 32 bits.
 func PJW(str []byte) uint32 {
