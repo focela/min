@@ -2,8 +2,8 @@
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
-// Package code provides universal error code definition and common error codes implements.
-package code
+// Package rccode provides universal error code definition and common error codes implements.
+package rccode
 
 // Code is universal error code interface definition.
 type Code interface {
