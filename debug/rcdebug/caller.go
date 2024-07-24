@@ -108,7 +108,7 @@ func filterFileByFilters(file string, filters []string) (filtered bool) {
 	if file == "" {
 		return true
 	}
-	// Filter gdebug package callings.
+	// Filter rcdebug package callings.
 	if strings.Contains(file, stackFilterKey) {
 		return true
 	}
