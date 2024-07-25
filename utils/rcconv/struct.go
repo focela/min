@@ -74,7 +74,7 @@ func doStructWithJsonCheck(params interface{}, pointer interface{}) (err error, 
 			}
 		}
 	default:
-		// The `params` might be struct that implements interface function Interface, eg: gvar.Var.
+		// The `params` might be struct that implements interface function Interface, eg: rcvar.Var.
 		if v, ok := params.(iInterface); ok {
 			return doStructWithJsonCheck(v.Interface(), pointer)
 		}

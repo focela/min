@@ -408,7 +408,7 @@ func doMapConvertForMapOrStructValue(in doMapConvertForMapOrStructValueInput) in
 				switch rvAttrKind {
 				case reflect.Struct:
 					// Embedded struct and has no fields, just ignores it.
-					// Eg: gmeta.Meta
+					// Eg: rcmeta.Meta
 					if rvAttrField.Type().NumField() == 0 {
 						continue
 					}
