@@ -8,35 +8,36 @@ import (
 	"fmt"
 )
 
-// localCode is an implementation of the Code interface for internal usage only.
+// localCode is an implementer for the interface ErrorCode for internal usage only.
 type localCode struct {
 	code    int         // Error code, usually an integer.
 	message string      // Brief message for this error code.
-	detail  interface{} // Designed as an extension field for additional error details.
+	detail  interface{} // As type of interface, it is mainly designed as an extension field for error code.
 }
 
-// Code returns the integer value of the current error code.
+// Code returns the integer number of the current error code.
 func (c localCode) Code() int {
 	return c.code
 }
 
-// Message returns a brief message for the current error code.
+// Message returns the brief message for the current error code.
 func (c localCode) Message() string {
 	return c.message
 }
 
-// Detail returns additional information related to the current error code.
+// Detail returns the detailed information of the current error code,
+// which is mainly designed as an extension field for error code.
 func (c localCode) Detail() interface{} {
 	return c.detail
 }
 
-// String returns a string representation of the current error code.
+// String returns the current error code as a string.
 func (c localCode) String() string {
 	if c.detail != nil {
-		return fmt.Sprintf(`%d: %s %v`, c.code, c.message, c.detail)
+		return fmt.Sprintf(`%d:%s %v`, c.code, c.message, c.detail)
 	}
 	if c.message != "" {
-		return fmt.Sprintf(`%d: %s`, c.code, c.message)
+		return fmt.Sprintf(`%d:%s`, c.code, c.message)
 	}
 	return fmt.Sprintf(`%d`, c.code)
 }
