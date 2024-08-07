@@ -12,64 +12,54 @@ import (
 )
 
 var (
-	defaultParsedArgs    = make([]string, 0)
-	defaultParsedOptions = make(map[string]string)
-	argumentRegex        = regexp.MustCompile(`^\-{1,2}([\w\?\.\-]+)(=)?(.*)$`)
+	parsedArgs    = make([]string, 0)
+	parsedOptions = make(map[string]string)
+	argRegex      = regexp.MustCompile(`^\-{1,2}([\w\?\.\-]+)(=)?(.*)$`)
 )
 
-// Init does custom initialization.
+// Init initializes the argument and option parsing.
 func Init(args ...string) {
 	if len(args) == 0 {
-		if len(defaultParsedArgs) == 0 && len(defaultParsedOptions) == 0 {
-			args = os.Args
-		} else {
-			return
-		}
-	} else {
-		// Clear previous parsed arguments and options if any new args are passed.
-		defaultParsedArgs = make([]string, 0)
-		defaultParsedOptions = make(map[string]string)
+		args = os.Args
+		parsedArgs = make([]string, 0)
+		parsedOptions = make(map[string]string)
 	}
-
-	// Parsing os.Args with default algorithm.
-	defaultParsedArgs, defaultParsedOptions = ParseUsingDefaultAlgorithm(args...)
+	// Parse os.Args with the default algorithm.
+	parsedArgs, parsedOptions = parseArgs(args...)
 }
 
-// ParseUsingDefaultAlgorithm parses arguments using default algorithm.
-func ParseUsingDefaultAlgorithm(args ...string) (parsedArgs []string, parsedOptions map[string]string) {
-	parsedArgs = make([]string, 0)
-	parsedOptions = make(map[string]string)
+// parseArgs parses arguments using the default algorithm.
+func parseArgs(args ...string) ([]string, map[string]string) {
+	parsedArgs := make([]string, 0)
+	parsedOptions := make(map[string]string)
 	for i := 0; i < len(args); {
-		array := argumentRegex.FindStringSubmatch(args[i])
-		if len(array) > 2 {
-			if array[2] == "=" {
-				parsedOptions[array[1]] = array[3]
+		matches := argRegex.FindStringSubmatch(args[i])
+		if len(matches) > 2 {
+			if matches[2] == "=" {
+				parsedOptions[matches[1]] = matches[3]
 			} else if i < len(args)-1 {
 				if len(args[i+1]) > 0 && args[i+1][0] == '-' {
-					// Eg: plume gen -d -n 1
-					parsedOptions[array[1]] = array[3]
+					parsedOptions[matches[1]] = matches[3]
 				} else {
-					// Eg: plume gen -n 2
-					parsedOptions[array[1]] = args[i+1]
+					parsedOptions[matches[1]] = args[i+1]
 					i += 2
 					continue
 				}
 			} else {
-				// Eg: plume gen -h
-				parsedOptions[array[1]] = array[3]
+				parsedOptions[matches[1]] = matches[3]
 			}
 		} else {
 			parsedArgs = append(parsedArgs, args[i])
 		}
 		i++
 	}
-	return
+	return parsedArgs, parsedOptions
 }
 
 // GetOpt returns the option value named `name`.
 func GetOpt(name string, def ...string) string {
 	Init()
-	if v, ok := defaultParsedOptions[name]; ok {
+	if v, ok := parsedOptions[name]; ok {
 		return v
 	}
 	if len(def) > 0 {
@@ -81,21 +71,21 @@ func GetOpt(name string, def ...string) string {
 // GetOptAll returns all parsed options.
 func GetOptAll() map[string]string {
 	Init()
-	return defaultParsedOptions
+	return parsedOptions
 }
 
-// ContainsOpt checks whether option named `name` exists in the arguments.
+// ContainsOpt checks whether the option named `name` exists in the arguments.
 func ContainsOpt(name string) bool {
 	Init()
-	_, ok := defaultParsedOptions[name]
+	_, ok := parsedOptions[name]
 	return ok
 }
 
 // GetArg returns the argument at `index`.
 func GetArg(index int, def ...string) string {
 	Init()
-	if index < len(defaultParsedArgs) {
-		return defaultParsedArgs[index]
+	if index < len(parsedArgs) {
+		return parsedArgs[index]
 	}
 	if len(def) > 0 {
 		return def[0]
@@ -106,29 +96,27 @@ func GetArg(index int, def ...string) string {
 // GetArgAll returns all parsed arguments.
 func GetArgAll() []string {
 	Init()
-	return defaultParsedArgs
+	return parsedArgs
 }
 
 // GetOptWithEnv returns the command line argument of the specified `key`.
-// If the argument does not exist, then it returns the environment variable with specified `key`.
-// It returns the default value `def` if none of them exists.
+// If the argument does not exist, it returns the environment variable with the specified `key`.
+// It returns the default value `def` if none of them exist.
 //
 // Fetching Rules:
-// 1. Command line arguments are in lowercase format, eg: plume.package.variable;
-// 2. Environment arguments are in uppercase format, eg: PLUME_PACKAGE_VARIABLE；
+// 1. Command line arguments are in lowercase format, e.g., muse.package.variable;
+// 2. Environment arguments are in uppercase format, e.g., MUSE_PACKAGE_VARIABLE.
 func GetOptWithEnv(key string, def ...string) string {
 	cmdKey := strings.ToLower(strings.ReplaceAll(key, "_", "."))
 	if ContainsOpt(cmdKey) {
 		return GetOpt(cmdKey)
-	} else {
-		envKey := strings.ToUpper(strings.ReplaceAll(key, ".", "_"))
-		if r, ok := os.LookupEnv(envKey); ok {
-			return r
-		} else {
-			if len(def) > 0 {
-				return def[0]
-			}
-		}
+	}
+	envKey := strings.ToUpper(strings.ReplaceAll(key, ".", "_"))
+	if value, ok := os.LookupEnv(envKey); ok {
+		return value
+	}
+	if len(def) > 0 {
+		return def[0]
 	}
 	return ""
 }
