@@ -24,7 +24,7 @@ func Stack(skip ...int) string {
 // StackWithFilter returns a formatted stack trace of the goroutine that calls it.
 // The parameter `filter` is used to filter the path of the caller.
 func StackWithFilter(filter string, skip ...int) string {
-	filters := []string{}
+	var filters []string
 	if filter != "" {
 		filters = append(filters, filter)
 	}
