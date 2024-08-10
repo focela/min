@@ -2,11 +2,11 @@
 // Use of this source code is governed by an MIT style
 // license that can be found in the LICENSE file.
 
-// Package tag provides tag content storing for struct.
+// Package tags provides tag content storing for struct.
 //
 // Note that calling functions of this package is not concurrently safe,
 // which means you cannot call them in runtime but in boot procedure.
-package tag
+package tags
 
 const (
 	Default           = "default"      // Default is the tag used to specify default values for struct fields when receiving parameters from an HTTP request.
