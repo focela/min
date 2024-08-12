@@ -1,3 +1,3 @@
-module github.com/focela/aid
+module github.com/focela/min
 
 go 1.22
